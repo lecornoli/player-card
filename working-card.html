@@ -1864,12 +1864,6 @@
         var smoothGamma = 0;
         var dampingFactor = 0.15; // Smooth interpolation
 
-        // 🧠 Natural recentering when device is held still
-        var lastMovementTime = Date.now();
-        var STILLNESS_THRESHOLD = 0.4; // degrees (how still is "still")
-        var STILLNESS_TIME = 1500;     // ms before recenter starts
-        var RECENTER_SPEED = 0.015;    // slow drift speed (human-safe)
-
         // Pose-lock recentering (stable tilt handling)
         var lastBeta = null;
         var lastGamma = null;
@@ -1902,20 +1896,19 @@
             var sens = CONFIG.gyro.sensitivity;
             var max = CONFIG.gyro.maxTilt;
 
-            var relativeBeta = beta - initialBeta;
-            var relativeGamma = gamma - initialGamma;
-
-            // Detect actual device rotation (not tilt amount)
+            // Pose-lock detection
             var deltaBeta = Math.abs(beta - lastBeta);
             var deltaGamma = Math.abs(gamma - lastGamma);
 
-            // Has the phone meaningfully rotated?
+            var poseLocked = false;
+
             if (deltaBeta > POSE_EPSILON || deltaGamma > POSE_EPSILON) {
                 lastPoseChangeTime = Date.now();
             } else {
-                // Phone is held in a stable pose
                 if (Date.now() - lastPoseChangeTime > POSE_LOCK_TIME) {
-                    // Slowly redefine center toward current pose
+                    poseLocked = true;
+
+                    // Slowly redefine center
                     initialBeta += (beta - initialBeta) * POSE_RECENTER_SPEED;
                     initialGamma += (gamma - initialGamma) * POSE_RECENTER_SPEED;
                 }
@@ -1925,14 +1918,24 @@
             lastBeta = beta;
             lastGamma = gamma;
 
+            // Recompute relative tilt AFTER center drift
+            var relativeBeta = beta - initialBeta;
+            var relativeGamma = gamma - initialGamma;
 
             // Target tilt values
             var targetX = Math.max(-max, Math.min(max, relativeGamma / (90 / max) * sens));
             var targetY = Math.max(-max, Math.min(max, relativeBeta / (90 / max) * sens));
 
             // SMOOTH DAMPENING - prevents jittery max-tilt behavior
-            smoothGamma += (targetX - smoothGamma) * dampingFactor;
-            smoothBeta += (targetY - smoothBeta) * dampingFactor;
+            if (poseLocked) {
+                // When pose-locked, gently relax tilt toward zero
+                smoothGamma += (0 - smoothGamma) * 0.08;
+                smoothBeta += (0 - smoothBeta) * 0.08;
+            } else {
+                // Normal tracking
+                smoothGamma += (targetX - smoothGamma) * dampingFactor;
+                smoothBeta += (targetY - smoothBeta) * dampingFactor;
+            }
 
             // Clamp again after smoothing
             var tx = Math.max(-max, Math.min(max, smoothGamma));
