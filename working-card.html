@@ -178,6 +178,19 @@
             filter: blur(20px);
         }
 
+        /* Material depth layer (glass surface) */
+        .material-layer {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                    rgba(255, 255, 255, 0.04),
+                    rgba(255, 255, 255, 0.01));
+            backdrop-filter: blur(6px) saturate(1.1);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+
         .premium-shimmer.active {
             animation: smoothAuraFade 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
@@ -1463,755 +1476,760 @@
     <div class="particle-container" id="particleContainer"></div>
     <div class="card-container">
         <div class="player-card" id="playerCard">
-            <div class="movement-shine" id="movementShine"></div>
-            <div class="specular-shine" id="specularShine"></div>
-            <div class="tilt-shine" id="tiltShine"></div>
-            <div class="bg-logo parallax-bg" id="bgLogo" data-depth="0.15"></div>
-            <div class="depth-layers">
-                <div class="depth-layer"></div>
-                <div class="depth-layer"></div>
-                <div class="depth-layer"></div>
-                <div class="depth-layer"></div>
-            </div>
-            <!-- Header -->
-            <div class="card-header" data-depth="0.8">
-                <a href="https://www.facebook.com/SarawakEsportsAssociation/" target="_blank" rel="noopener noreferrer"
-                    class="tournament-badge metal-sheen">
-                    <span id="tournamentText">LATEST TOURNAMENT</span>
-                    <span class="badge-arrow" aria-hidden="true"></span>
+            <div class="player-card" id="playerCard">
+
+                <!-- MATERIAL DEPTH LAYER (Step 1) -->
+                <div class="material-layer"></div>
+                <div class="movement-shine" id="movementShine"></div>
+                <div class="specular-shine" id="specularShine"></div>
+                <div class="tilt-shine" id="tiltShine"></div>
+                <div class="bg-logo parallax-bg" id="bgLogo" data-depth="0.15"></div>
+                <div class="depth-layers">
+                    <div class="depth-layer"></div>
+                    <div class="depth-layer"></div>
+                    <div class="depth-layer"></div>
+                    <div class="depth-layer"></div>
+                </div>
+                <!-- Header -->
+                <div class="card-header" data-depth="0.8">
+                    <a href="https://www.facebook.com/SarawakEsportsAssociation/" target="_blank"
+                        rel="noopener noreferrer" class="tournament-badge metal-sheen">
+                        <span id="tournamentText">LATEST TOURNAMENT</span>
+                        <span class="badge-arrow" aria-hidden="true"></span>
 
 
-                </a>
-                <div class="player-info-grid">
-                    <div class="player-photo parallax-fg" id="playerPhoto" data-depth="0.9">
-                        <div class="player-photo-inner">👤 </div>
-                    </div>
-                    <div class="player-details">
-                        <h1 class="player-name" id="playerName">PLAYER NAME</h1>
-                        <div class="player-ign" id="playerIGN">@username_IGN</div>
-                        <div class="player-role" id="playerRole">Player Role • Game Role</div>
-                        <div class="player-game" id="playerGame">GAME TITLE</div>
+                    </a>
+                    <div class="player-info-grid">
+                        <div class="player-photo parallax-fg" id="playerPhoto" data-depth="0.9">
+                            <div class="player-photo-inner">👤 </div>
+                        </div>
+                        <div class="player-details">
+                            <h1 class="player-name" id="playerName">PLAYER NAME</h1>
+                            <div class="player-ign" id="playerIGN">@username_IGN</div>
+                            <div class="player-role" id="playerRole">Player Role • Game Role</div>
+                            <div class="player-game" id="playerGame">GAME TITLE</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!-- Team Bar -->
-            <div class="team-bar">
-                <div class="team-name" id="teamName">TEAM NAME</div>
-            </div>
-            <!-- Content Area -->
-            <div class="content-wrapper">
-                <div class="content-area">
-                    <!-- Stats View -->
-                    <div class="stats-view active" id="statsView">
-                        <div class="stat-section" id="perfSection">
-                            <div class="stat-header"><span>Performance Stats</span></div>
-                            <div class="stat-list" id="performanceStats"></div>
-                        </div>
-                        <div class="stat-section" id="tourSection">
-                            <div class="stat-header"><span>Tournament History</span></div>
-                            <div class="stat-list" id="tournamentHistory"></div>
-                        </div>
-                    </div>
-                    <!-- QR View -->
-                    <div class="qr-view" id="qrView">
-                        <div class="qr-container">
-                            <div class="qr-code" id="qrCode">
-                                <div class="qr-placeholder">QR CODE</div>
+                <!-- Team Bar -->
+                <div class="team-bar">
+                    <div class="team-name" id="teamName">TEAM NAME</div>
+                </div>
+                <!-- Content Area -->
+                <div class="content-wrapper">
+                    <div class="content-area">
+                        <!-- Stats View -->
+                        <div class="stats-view active" id="statsView">
+                            <div class="stat-section" id="perfSection">
+                                <div class="stat-header"><span>Performance Stats</span></div>
+                                <div class="stat-list" id="performanceStats"></div>
                             </div>
-                            <div class="qr-label">Scan for player profile</div>
+                            <div class="stat-section" id="tourSection">
+                                <div class="stat-header"><span>Tournament History</span></div>
+                                <div class="stat-list" id="tournamentHistory"></div>
+                            </div>
+                        </div>
+                        <!-- QR View -->
+                        <div class="qr-view" id="qrView">
+                            <div class="qr-container">
+                                <div class="qr-code" id="qrCode">
+                                    <div class="qr-placeholder">QR CODE</div>
+                                </div>
+                                <div class="qr-label">Scan for player profile</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- Bottom Bar -->
-            <div class="bottom-bar">
-                <div class="bottom-info">Official Player Card</div>
-                <div class="view-toggle" id="viewToggle"><span class="toggle-text" id="toggleText">QR Code</span></div>
+                <!-- Bottom Bar -->
+                <div class="bottom-bar">
+                    <div class="bottom-info">Official Player Card</div>
+                    <div class="view-toggle" id="viewToggle"><span class="toggle-text" id="toggleText">QR Code</span>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="demo-note"><span id="demoText">Hover for 3D • Click QR toggle</span></div>
-    <script> // ╔════════════════════════════════════════════════════════════════════════════╗
-        // ║                        🎮 EDITABLE CONFIGURATION 🎮                        ║
-        // ║                         Edit values below this line                        ║
-        // ╚════════════════════════════════════════════════════════════════════════════╝
+        <div class="demo-note"><span id="demoText">Hover for 3D • Click QR toggle</span></div>
+        <script> // ╔════════════════════════════════════════════════════════════════════════════╗
+            // ║                        🎮 EDITABLE CONFIGURATION 🎮                        ║
+            // ║                         Edit values below this line                        ║
+            // ╚════════════════════════════════════════════════════════════════════════════╝
 
-        var CONFIG = {
-            player: {
-                name: "",
-                ign: "",
-                photo: "",
-                game: "",
-                role: ""
-            },
-            team: {
-                name: "",
-                logo: ""
-            },
-            tournament: "",
-            facebookUrl: "",
-            performanceStats: [
-                { label: "", value: "" },
-                { label: "", value: "" },
-                { label: "", value: "" },
-                { label: "", value: "" },
-                { label: "", value: "" },
-                { label: "", value: "" }
-            ],
-            tournamentHistory: [
-                "",
-                "",
-                ""
-            ],
-            qrCode: {
-                type: "image",
-                content: "QR CODE",
-                imageUrl: "",
-                dataUrl: ""
-            },
-            sounds: {
-                toggle: "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3",
-                statClick: "https://assets.mixkit.co/active_storage/sfx/2997/2997-preview.mp3"
-            },
-            gyro: {
-                sensitivity: 3,
-                maxTilt: 20
-            }
-        };
-
-        function safeText(value, fallback) {
-            return (typeof value === 'string' && value.trim() !== '')
-                ? value
-                : fallback;
-        }
-
-        // ╔════════════════════════════════════════════════════════════════════════════╗
-        // ║                    ⚠️  DO NOT EDIT BELOW THIS LINE  ⚠️                     ║
-        // ║                          System Code Begins Here                           ║
-        // ╚════════════════════════════════════════════════════════════════════════════╝
-
-        var elements = {
-            card: document.getElementById('playerCard'),
-            wrapper: document.querySelector('.card-container'),
-            viewToggle: document.getElementById('viewToggle'),
-            toggleText: document.getElementById('toggleText'),
-            statsView: document.getElementById('statsView'),
-            qrView: document.getElementById('qrView'),
-            bgLogo: document.getElementById('bgLogo'),
-            movementShine: document.getElementById('movementShine'),
-            specularShine: document.getElementById('specularShine'),
-            tiltShine: document.getElementById('tiltShine')
-        };
-
-        var parallaxLayers = document.querySelectorAll('[data-depth]');
-
-
-        var state = {
-            showingStats: true,
-            gyroEnabled: false
-        };
-
-        var hasInteracted = false;
-
-        // Audio
-        var audioContext = null;
-        var soundBuffers = {};
-
-        function initAudio() {
-            try {
-                var AudioContext = window.AudioContext || window.webkitAudioContext;
-                audioContext = new AudioContext();
-            } catch (e) {
-                console.log('Web Audio not supported');
-            }
-        }
-
-        function loadSound(name, url) {
-            if (!audioContext) return;
-            fetch(url).then(function (r) {
-                return r.arrayBuffer();
-            }).then(function (ab) {
-                return audioContext.decodeAudioData(ab);
-            }).then(function (buf) {
-                soundBuffers[name] = buf;
-            }).catch(function () { });
-        }
-
-        function playSound(name) {
-            if (!audioContext || !soundBuffers[name]) return;
-            try {
-                var src = audioContext.createBufferSource();
-                src.buffer = soundBuffers[name];
-                var gain = audioContext.createGain();
-                gain.gain.value = 0.2;
-                src.connect(gain);
-                gain.connect(audioContext.destination);
-                src.start(0);
-            } catch (e) { }
-        }
-
-        function resolveImageUrl(url) {
-            if (typeof url !== 'string') return '';
-            if (url.includes('drive.google.com')) {
-                let fileId = null;
-                if (url.includes('/file/d/')) {
-                    fileId = url.split('/file/d/')[1].split('/')[0];
-                } else if (url.includes('id=')) {
-                    fileId = url.split('id=')[1].split('&')[0];
+            var CONFIG = {
+                player: {
+                    name: "",
+                    ign: "",
+                    photo: "",
+                    game: "",
+                    role: ""
+                },
+                team: {
+                    name: "",
+                    logo: ""
+                },
+                tournament: "",
+                facebookUrl: "",
+                performanceStats: [
+                    { label: "", value: "" },
+                    { label: "", value: "" },
+                    { label: "", value: "" },
+                    { label: "", value: "" },
+                    { label: "", value: "" },
+                    { label: "", value: "" }
+                ],
+                tournamentHistory: [
+                    "",
+                    "",
+                    ""
+                ],
+                qrCode: {
+                    type: "image",
+                    content: "QR CODE",
+                    imageUrl: "",
+                    dataUrl: ""
+                },
+                sounds: {
+                    toggle: "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3",
+                    statClick: "https://assets.mixkit.co/active_storage/sfx/2997/2997-preview.mp3"
+                },
+                gyro: {
+                    sensitivity: 3,
+                    maxTilt: 20
                 }
-                if (fileId) {
-                    return 'https://drive.google.com/uc?id=' + fileId;
+            };
+
+            function safeText(value, fallback) {
+                return (typeof value === 'string' && value.trim() !== '')
+                    ? value
+                    : fallback;
+            }
+
+            // ╔════════════════════════════════════════════════════════════════════════════╗
+            // ║                    ⚠️  DO NOT EDIT BELOW THIS LINE  ⚠️                     ║
+            // ║                          System Code Begins Here                           ║
+            // ╚════════════════════════════════════════════════════════════════════════════╝
+
+            var elements = {
+                card: document.getElementById('playerCard'),
+                wrapper: document.querySelector('.card-container'),
+                viewToggle: document.getElementById('viewToggle'),
+                toggleText: document.getElementById('toggleText'),
+                statsView: document.getElementById('statsView'),
+                qrView: document.getElementById('qrView'),
+                bgLogo: document.getElementById('bgLogo'),
+                movementShine: document.getElementById('movementShine'),
+                specularShine: document.getElementById('specularShine'),
+                tiltShine: document.getElementById('tiltShine')
+            };
+
+            var parallaxLayers = document.querySelectorAll('[data-depth]');
+
+
+            var state = {
+                showingStats: true,
+                gyroEnabled: false
+            };
+
+            var hasInteracted = false;
+
+            // Audio
+            var audioContext = null;
+            var soundBuffers = {};
+
+            function initAudio() {
+                try {
+                    var AudioContext = window.AudioContext || window.webkitAudioContext;
+                    audioContext = new AudioContext();
+                } catch (e) {
+                    console.log('Web Audio not supported');
                 }
             }
-            return url;
-        }
 
-        function setDynamicTextSize(el, text) {
-            if (text.length >= 30) {
-                el.setAttribute('data-length', 'long');
-            } else {
-                el.removeAttribute('data-length');
-            }
-        }
-
-        function checkScrollable(listEl, sectionEl) {
-            if (listEl.scrollHeight - listEl.clientHeight > 4) {
-                sectionEl.classList.add('has-scroll');
-                listEl.addEventListener('scroll', function () {
-                    if (listEl.scrollTop + listEl.clientHeight >= listEl.scrollHeight - 5) {
-                        sectionEl.classList.add('scrolled-bottom');
-                    } else {
-                        sectionEl.classList.remove('scrolled-bottom');
-                    }
-                });
-            } else {
-                sectionEl.classList.remove('has-scroll');
-            }
-        }
-
-        function initializeCard() {
-            document.getElementById('playerName').textContent = safeText(CONFIG.player.name, 'PLAYER NAME');
-            document.getElementById('playerIGN').textContent = safeText(CONFIG.player.ign, '@PLAYER_IGN');
-            document.getElementById('playerGame').textContent = safeText(CONFIG.player.game, 'GAME TITLE');
-            document.getElementById('playerRole').textContent = safeText(CONFIG.player.role, 'Player Role • Game Role');
-
-            var photoEl = document.getElementById('playerPhoto');
-            var photoInner = photoEl.querySelector('.player-photo-inner');
-            photoInner.replaceChildren();
-
-            if (typeof CONFIG.player.photo === 'string' && CONFIG.player.photo.trim() !== '') {
-                var img = document.createElement('img');
-                img.src = resolveImageUrl(CONFIG.player.photo);
-                img.alt = 'Player Photo';
-                img.onerror = function () {
-                    photoInner.textContent = '👤';
-                };
-                photoInner.appendChild(img);
-            } else {
-                photoInner.textContent = '👤';
-                photoInner.style.fontSize = '55px';
-            }
-
-            document.getElementById('teamName').textContent = safeText(CONFIG.team.name, 'TEAM NAME');
-            document.getElementById('tournamentText').textContent = safeText(CONFIG.tournament, 'PLAYER CARD');
-            document.querySelector('.tournament-badge').setAttribute('href', CONFIG.facebookUrl);
-            setTeamLogo();
-
-            function setTeamLogo() {
-                const el = document.getElementById('bgLogo');
-                if (!el) return;
-                el.innerHTML = '';
-                const logo = CONFIG.team.logo;
-                if (typeof logo === 'string' && logo.trim() !== '' &&
-                    /\.(png|jpg|jpeg|webp|svg)$/i.test(logo)) {
-                    const img = document.createElement('img');
-                    img.src = resolveImageUrl(logo);
-                    img.alt = 'Team Logo';
-                    el.appendChild(img);
-                    return;
-                }
-                const span = document.createElement('span');
-                span.className = 'bg-logo-text';
-                span.textContent = logo || '🏆';
-                el.appendChild(span);
-            }
-
-            setDynamicTextSize(document.getElementById('playerName'), CONFIG.player.name);
-            setDynamicTextSize(document.getElementById('playerIGN'), CONFIG.player.ign);
-            setDynamicTextSize(document.getElementById('teamName'), CONFIG.team.name);
-
-            var perfStats = document.getElementById('performanceStats');
-            perfStats.innerHTML = CONFIG.performanceStats.map(function (s) {
-                return '<div class="stat-item"><span class="stat-label">' + s.label + '</span><span class="stat-value">' + s.value + '</span></div>';
-            }).join('');
-
-            var tournHist = document.getElementById('tournamentHistory');
-            tournHist.innerHTML = CONFIG.tournamentHistory.map(function (t) {
-                return '<div class="stat-item"><span class="stat-label">' + t + '</span></div>';
-            }).join('');
-
-            var allStatItems = document.querySelectorAll('.stat-item');
-            allStatItems.forEach(function (item) {
-                item.addEventListener('click', function (e) {
-                    e.stopPropagation();
-                    if (!audioContext) initAudio();
-                    playSound('statClick');
-                });
-            });
-
-            setupQRCode();
-
-            setTimeout(function () {
-                checkScrollable(perfStats, document.getElementById('perfSection'));
-                checkScrollable(tournHist, document.getElementById('tourSection'));
-            }, 100);
-        }
-
-        function setupQRCode() {
-            var qrEl = document.getElementById('qrCode');
-            if (CONFIG.qrCode.type === 'image') {
-                var img = document.createElement('img');
-                img.src = resolveImageUrl(CONFIG.qrCode.imageUrl);
-                img.alt = 'QR Code';
-                img.onerror = function () {
-                    qrEl.innerHTML = '<div class="qr-placeholder">QR CODE</div>';
-                };
-                qrEl.innerHTML = '';
-                qrEl.appendChild(img);
-            } else if (CONFIG.qrCode.type === 'url' && typeof QRCode !== 'undefined') {
-                qrEl.innerHTML = '';
-                new QRCode(qrEl, {
-                    text: CONFIG.qrCode.dataUrl, width: 126, height: 126
-                });
-            } else {
-                qrEl.innerHTML = '<div class="qr-placeholder">' + CONFIG.qrCode.content + '</div>';
-            }
-        }
-
-        function toggleView() {
-            if (!audioContext) initAudio();
-            playSound('toggle');
-            state.showingStats = !state.showingStats;
-            if (state.showingStats) {
-                elements.statsView.classList.add('active');
-                elements.qrView.classList.remove('active');
-                elements.toggleText.textContent = 'QR Code';
-            } else {
-                elements.statsView.classList.remove('active');
-                elements.qrView.classList.add('active');
-                elements.toggleText.textContent = 'Stats';
-            }
-        }
-
-        elements.viewToggle.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            toggleView();
-        });
-
-        elements.viewToggle.addEventListener('touchstart', function (e) {
-            e.stopPropagation();
-        }, { passive: true });
-
-        elements.viewToggle.addEventListener('touchend', function (e) {
-            e.stopPropagation();
-        }, { passive: true });
-
-        elements.card.addEventListener('click', function (e) {
-            e.stopPropagation();
-        });
-
-        elements.card.addEventListener('touchstart', function (e) {
-            e.stopPropagation();
-        }, { passive: true });
-
-        elements.card.addEventListener('touchmove', function (e) {
-            e.stopPropagation();
-        }, { passive: true });
-
-        elements.card.addEventListener('touchend', function (e) {
-            e.stopPropagation();
-        }, { passive: true });
-
-        // 3D tilt
-        elements.wrapper.addEventListener('mousemove', function (e) {
-            if (state.gyroEnabled) return;
-            var rect = elements.card.getBoundingClientRect();
-            var x = e.clientX - rect.left;
-            var y = e.clientY - rect.top;
-            var cx = rect.width / 2;
-            var cy = rect.height / 2;
-
-            var rx = ((y - cy) / cy) * -8;
-            var ry = ((x - cx) / cx) * 8;
-
-            var tiltAmount = Math.sqrt(rx * rx + ry * ry);
-            var scale = 1 + (tiltAmount * 0.002);
-            var translateZ = tiltAmount * 1;
-
-            elements.card.style.transform = 'rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) scale(' + scale + ') translateZ(' + translateZ + 'px)';
-            elements.card.classList.add('tilting');
-
-            var shineX = (x / rect.width) * 100;
-            var shineY = (y / rect.height) * 100;
-            elements.movementShine.style.transform = 'translate(' + (shineX - 50) + '%, ' + (shineY - 50) + '%)';
-            elements.movementShine.style.opacity = '1';
-
-            var angle = Math.atan2(ry, rx) * (180 / Math.PI) + 90;
-            elements.specularShine.style.setProperty('--shine-angle', angle + 'deg');
-            elements.specularShine.style.opacity = Math.min(tiltAmount / 15, 0.7);
-
-            var shineAngle = angle + 90;
-            elements.tiltShine.style.setProperty('--tilt-angle', shineAngle + 'deg');
-            elements.tiltShine.style.opacity = Math.min(tiltAmount / 15, 0.4);
-        });
-
-        elements.wrapper.addEventListener('mouseleave', function () {
-            if (state.gyroEnabled) return;
-            elements.card.style.transform = 'rotateX(0) rotateY(0) scale(1) translateZ(0)';
-            elements.card.classList.remove('tilting');
-            elements.movementShine.style.opacity = '0';
-            elements.specularShine.style.opacity = '0';
-            elements.tiltShine.style.opacity = '0';
-        });
-
-
-        // Apple-style parallax (spring-based, always centered)
-        var parallaxX = 0;
-        var parallaxY = 0;
-
-        var shineLagX = 0;
-        var shineLagY = 0;
-
-        var PARALLAX_RANGE = 8;      // max visual tilt (degrees)
-        var PARALLAX_RESPONSE = 0.2; // responsiveness to movement
-        var PARALLAX_RETURN = 0.16;   // how fast it recenters
-
-
-        // HARD recenter-on-stillness (1s lock = reset tilt)
-        var lastBeta = null;
-        var lastGamma = null;
-
-        function handleOrientation(e) {
-            if (!state.gyroEnabled) return;
-
-            var beta = e.beta || 0;
-            var gamma = e.gamma || 0;
-
-            // Init last values
-            if (lastBeta === null) {
-                lastBeta = beta;
-                lastGamma = gamma;
-                return;
-            }
-
-            // Motion delta (NOT absolute orientation)
-            var deltaBeta = beta - lastBeta;
-            var deltaGamma = gamma - lastGamma;
-
-            // Clamp first
-            deltaBeta = Math.max(-10, Math.min(10, deltaBeta));
-            deltaGamma = Math.max(-10, Math.min(10, deltaGamma));
-
-            // Then normalize motion force
-            var forceX = Math.max(-1, Math.min(1, deltaGamma / 6));
-            var forceY = Math.max(-1, Math.min(1, deltaBeta / 6));
-
-            forceX *= 0.85;
-            forceY *= 0.85;
-
-            // Apply movement impulse
-            parallaxX += forceX * PARALLAX_RESPONSE;
-            parallaxY += forceY * PARALLAX_RESPONSE;
-
-            // Clamp range
-            parallaxX = Math.max(-PARALLAX_RANGE, Math.min(PARALLAX_RANGE, parallaxX));
-            parallaxY = Math.max(-PARALLAX_RANGE, Math.min(PARALLAX_RANGE, parallaxY));
-
-            // Always spring back to center
-            parallaxX += (0 - parallaxX) * PARALLAX_RETURN;
-            parallaxY += (0 - parallaxY) * PARALLAX_RETURN;
-
-            // Apply transform
-            var tiltAmount = Math.sqrt(parallaxX * parallaxX + parallaxY * parallaxY);
-            // Light lag (shine follows motion with delay)
-            shineLagX += (parallaxX - shineLagX) * 0.12;
-            shineLagY += (parallaxY - shineLagY) * 0.12;
-
-            elements.movementShine.style.transform =
-                'translate(' + (shineLagX * 6) + 'px, ' + (shineLagY * 6) + 'px)';
-
-            var scale = 1 + tiltAmount * 0.002;
-
-            elements.card.style.transform =
-                'rotateX(' + (-parallaxY) + 'deg) ' +
-                'rotateY(' + (-parallaxX) + 'deg) ' +
-                'scale(' + scale + ')';
-            // Dynamic shadow parallax (strong depth cue)
-            var shadowX = parallaxX * 2.5;
-            var shadowY = parallaxY * 2.5;
-
-            elements.card.style.boxShadow =
-                (-shadowX) + 'px ' +
-                (-shadowY) + 'px 40px rgba(0, 0, 0, 0.45)';
-            // Content micro-translation (internal depth)
-            var contentOffsetX = -parallaxX * 1.6;
-            var contentOffsetY = -parallaxY * 1.6;
-
-            var content = elements.card.querySelector('.content-wrapper');
-            if (content) {
-                content.style.transform =
-                    'translate(' + contentOffsetX + 'px, ' + contentOffsetY + 'px)';
-            }
-
-            // Focus separation (Apple-style depth cue)
-            var depthIntensity = Math.min(1, tiltAmount / PARALLAX_RANGE);
-
-            parallaxLayers.forEach(function (layer) {
-                var depth = parseFloat(layer.dataset.depth) || 0;
-
-                var moveX = -parallaxX * depth * 4;
-                var moveY = -parallaxY * depth * 4;
-
-                layer.style.transform =
-                    'translate3d(' + moveX + 'px, ' + moveY + 'px, 0)';
-
-                // Background softens
-                if (layer.classList.contains('parallax-bg')) {
-                    layer.style.filter =
-                        'blur(' + (depthIntensity * 2) + 'px)';
-                }
-
-                // Foreground stays sharp
-                if (layer.classList.contains('parallax-fg')) {
-                    layer.style.filter =
-                        'blur(' + ((1 - depthIntensity) * 1) + 'px)';
-                }
-            });
-
-
-            var shineX = 50 + (parallaxX / PARALLAX_RANGE) * 30;
-            var shineY = 50 + (parallaxY / PARALLAX_RANGE) * 30;
-
-            elements.movementShine.style.transform =
-                'translate(' + (shineX - 50) + '%, ' + (shineY - 50) + '%)';
-            elements.movementShine.style.opacity = Math.min(tiltAmount / 6, 0.6);
-
-            var angle = Math.atan2(parallaxX, -parallaxY) * (180 / Math.PI) + 90;
-            elements.specularShine.style.setProperty('--shine-angle', angle + 'deg');
-            elements.specularShine.style.opacity = Math.min(tiltAmount / 8, 0.5);
-
-            elements.tiltShine.style.opacity = Math.min(tiltAmount / 10, 0.4);
-
-
-            // Update last values
-            lastBeta = beta;
-            lastGamma = gamma;
-        }
-
-
-        function autoTriggerAll() {
-            if (hasInteracted) return;
-            hasInteracted = true;
-
-            var isMobileOrTablet = window.innerWidth <= 1024;
-            if (!isMobileOrTablet) return;
-
-            var elem = document.documentElement;
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen().catch(function () { });
-            } else if (elem.webkitRequestFullscreen) {
-                elem.webkitRequestFullscreen().catch(function () { });
-            } else if (elem.mozRequestFullScreen) {
-                elem.mozRequestFullScreen().catch(function () { });
-            }
-
-            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-                if (!audioContext) initAudio();
-                DeviceOrientationEvent.requestPermission().then(function (r) {
-                    if (r === 'granted') {
-                        state.gyroEnabled = true;
-                        window.addEventListener('deviceorientation', handleOrientation);
-                        parallaxX = 0;
-                        parallaxY = 0;
-                        lastBeta = null;
-                        lastGamma = null;
-
-                        document.getElementById('demoText').textContent = 'Tilt phone for 3D effect';
-                    }
+            function loadSound(name, url) {
+                if (!audioContext) return;
+                fetch(url).then(function (r) {
+                    return r.arrayBuffer();
+                }).then(function (ab) {
+                    return audioContext.decodeAudioData(ab);
+                }).then(function (buf) {
+                    soundBuffers[name] = buf;
                 }).catch(function () { });
             }
-        }
 
-        document.addEventListener('touchstart', autoTriggerAll, { once: true });
-        document.addEventListener('click', autoTriggerAll, { once: true });
-        document.addEventListener('touchend', autoTriggerAll, { once: true });
+            function playSound(name) {
+                if (!audioContext || !soundBuffers[name]) return;
+                try {
+                    var src = audioContext.createBufferSource();
+                    src.buffer = soundBuffers[name];
+                    var gain = audioContext.createGain();
+                    gain.gain.value = 0.2;
+                    src.connect(gain);
+                    gain.connect(audioContext.destination);
+                    src.start(0);
+                } catch (e) { }
+            }
 
-        if (window.DeviceOrientationEvent) {
-            if (typeof DeviceOrientationEvent.requestPermission !== 'function') {
-                state.gyroEnabled = true;
-                window.addEventListener('deviceorientation', handleOrientation);
-                parallaxX = 0;
-                parallaxY = 0;
-                lastBeta = null;
-                lastGamma = null;
+            function resolveImageUrl(url) {
+                if (typeof url !== 'string') return '';
+                if (url.includes('drive.google.com')) {
+                    let fileId = null;
+                    if (url.includes('/file/d/')) {
+                        fileId = url.split('/file/d/')[1].split('/')[0];
+                    } else if (url.includes('id=')) {
+                        fileId = url.split('id=')[1].split('&')[0];
+                    }
+                    if (fileId) {
+                        return 'https://drive.google.com/uc?id=' + fileId;
+                    }
+                }
+                return url;
+            }
 
-                console.log('Gyro auto-enabled (Android)');
+            function setDynamicTextSize(el, text) {
+                if (text.length >= 30) {
+                    el.setAttribute('data-length', 'long');
+                } else {
+                    el.removeAttribute('data-length');
+                }
+            }
+
+            function checkScrollable(listEl, sectionEl) {
+                if (listEl.scrollHeight - listEl.clientHeight > 4) {
+                    sectionEl.classList.add('has-scroll');
+                    listEl.addEventListener('scroll', function () {
+                        if (listEl.scrollTop + listEl.clientHeight >= listEl.scrollHeight - 5) {
+                            sectionEl.classList.add('scrolled-bottom');
+                        } else {
+                            sectionEl.classList.remove('scrolled-bottom');
+                        }
+                    });
+                } else {
+                    sectionEl.classList.remove('has-scroll');
+                }
+            }
+
+            function initializeCard() {
+                document.getElementById('playerName').textContent = safeText(CONFIG.player.name, 'PLAYER NAME');
+                document.getElementById('playerIGN').textContent = safeText(CONFIG.player.ign, '@PLAYER_IGN');
+                document.getElementById('playerGame').textContent = safeText(CONFIG.player.game, 'GAME TITLE');
+                document.getElementById('playerRole').textContent = safeText(CONFIG.player.role, 'Player Role • Game Role');
+
+                var photoEl = document.getElementById('playerPhoto');
+                var photoInner = photoEl.querySelector('.player-photo-inner');
+                photoInner.replaceChildren();
+
+                if (typeof CONFIG.player.photo === 'string' && CONFIG.player.photo.trim() !== '') {
+                    var img = document.createElement('img');
+                    img.src = resolveImageUrl(CONFIG.player.photo);
+                    img.alt = 'Player Photo';
+                    img.onerror = function () {
+                        photoInner.textContent = '👤';
+                    };
+                    photoInner.appendChild(img);
+                } else {
+                    photoInner.textContent = '👤';
+                    photoInner.style.fontSize = '55px';
+                }
+
+                document.getElementById('teamName').textContent = safeText(CONFIG.team.name, 'TEAM NAME');
+                document.getElementById('tournamentText').textContent = safeText(CONFIG.tournament, 'PLAYER CARD');
+                document.querySelector('.tournament-badge').setAttribute('href', CONFIG.facebookUrl);
+                setTeamLogo();
+
+                function setTeamLogo() {
+                    const el = document.getElementById('bgLogo');
+                    if (!el) return;
+                    el.innerHTML = '';
+                    const logo = CONFIG.team.logo;
+                    if (typeof logo === 'string' && logo.trim() !== '' &&
+                        /\.(png|jpg|jpeg|webp|svg)$/i.test(logo)) {
+                        const img = document.createElement('img');
+                        img.src = resolveImageUrl(logo);
+                        img.alt = 'Team Logo';
+                        el.appendChild(img);
+                        return;
+                    }
+                    const span = document.createElement('span');
+                    span.className = 'bg-logo-text';
+                    span.textContent = logo || '🏆';
+                    el.appendChild(span);
+                }
+
+                setDynamicTextSize(document.getElementById('playerName'), CONFIG.player.name);
+                setDynamicTextSize(document.getElementById('playerIGN'), CONFIG.player.ign);
+                setDynamicTextSize(document.getElementById('teamName'), CONFIG.team.name);
+
+                var perfStats = document.getElementById('performanceStats');
+                perfStats.innerHTML = CONFIG.performanceStats.map(function (s) {
+                    return '<div class="stat-item"><span class="stat-label">' + s.label + '</span><span class="stat-value">' + s.value + '</span></div>';
+                }).join('');
+
+                var tournHist = document.getElementById('tournamentHistory');
+                tournHist.innerHTML = CONFIG.tournamentHistory.map(function (t) {
+                    return '<div class="stat-item"><span class="stat-label">' + t + '</span></div>';
+                }).join('');
+
+                var allStatItems = document.querySelectorAll('.stat-item');
+                allStatItems.forEach(function (item) {
+                    item.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        if (!audioContext) initAudio();
+                        playSound('statClick');
+                    });
+                });
+
+                setupQRCode();
 
                 setTimeout(function () {
-                    var demoNote = document.querySelector('.demo-note');
-                    if (demoNote) {
-                        demoNote.style.transition = 'opacity 0.5s ease';
-                        demoNote.style.opacity = '0';
-                        setTimeout(function () {
-                            demoNote.style.display = 'none';
-                        }, 500);
+                    checkScrollable(perfStats, document.getElementById('perfSection'));
+                    checkScrollable(tournHist, document.getElementById('tourSection'));
+                }, 100);
+            }
+
+            function setupQRCode() {
+                var qrEl = document.getElementById('qrCode');
+                if (CONFIG.qrCode.type === 'image') {
+                    var img = document.createElement('img');
+                    img.src = resolveImageUrl(CONFIG.qrCode.imageUrl);
+                    img.alt = 'QR Code';
+                    img.onerror = function () {
+                        qrEl.innerHTML = '<div class="qr-placeholder">QR CODE</div>';
+                    };
+                    qrEl.innerHTML = '';
+                    qrEl.appendChild(img);
+                } else if (CONFIG.qrCode.type === 'url' && typeof QRCode !== 'undefined') {
+                    qrEl.innerHTML = '';
+                    new QRCode(qrEl, {
+                        text: CONFIG.qrCode.dataUrl, width: 126, height: 126
+                    });
+                } else {
+                    qrEl.innerHTML = '<div class="qr-placeholder">' + CONFIG.qrCode.content + '</div>';
+                }
+            }
+
+            function toggleView() {
+                if (!audioContext) initAudio();
+                playSound('toggle');
+                state.showingStats = !state.showingStats;
+                if (state.showingStats) {
+                    elements.statsView.classList.add('active');
+                    elements.qrView.classList.remove('active');
+                    elements.toggleText.textContent = 'QR Code';
+                } else {
+                    elements.statsView.classList.remove('active');
+                    elements.qrView.classList.add('active');
+                    elements.toggleText.textContent = 'Stats';
+                }
+            }
+
+            elements.viewToggle.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleView();
+            });
+
+            elements.viewToggle.addEventListener('touchstart', function (e) {
+                e.stopPropagation();
+            }, { passive: true });
+
+            elements.viewToggle.addEventListener('touchend', function (e) {
+                e.stopPropagation();
+            }, { passive: true });
+
+            elements.card.addEventListener('click', function (e) {
+                e.stopPropagation();
+            });
+
+            elements.card.addEventListener('touchstart', function (e) {
+                e.stopPropagation();
+            }, { passive: true });
+
+            elements.card.addEventListener('touchmove', function (e) {
+                e.stopPropagation();
+            }, { passive: true });
+
+            elements.card.addEventListener('touchend', function (e) {
+                e.stopPropagation();
+            }, { passive: true });
+
+            // 3D tilt
+            elements.wrapper.addEventListener('mousemove', function (e) {
+                if (state.gyroEnabled) return;
+                var rect = elements.card.getBoundingClientRect();
+                var x = e.clientX - rect.left;
+                var y = e.clientY - rect.top;
+                var cx = rect.width / 2;
+                var cy = rect.height / 2;
+
+                var rx = ((y - cy) / cy) * -8;
+                var ry = ((x - cx) / cx) * 8;
+
+                var tiltAmount = Math.sqrt(rx * rx + ry * ry);
+                var scale = 1 + (tiltAmount * 0.002);
+                var translateZ = tiltAmount * 1;
+
+                elements.card.style.transform = 'rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) scale(' + scale + ') translateZ(' + translateZ + 'px)';
+                elements.card.classList.add('tilting');
+
+                var shineX = (x / rect.width) * 100;
+                var shineY = (y / rect.height) * 100;
+                elements.movementShine.style.transform = 'translate(' + (shineX - 50) + '%, ' + (shineY - 50) + '%)';
+                elements.movementShine.style.opacity = '1';
+
+                var angle = Math.atan2(ry, rx) * (180 / Math.PI) + 90;
+                elements.specularShine.style.setProperty('--shine-angle', angle + 'deg');
+                elements.specularShine.style.opacity = Math.min(tiltAmount / 15, 0.7);
+
+                var shineAngle = angle + 90;
+                elements.tiltShine.style.setProperty('--tilt-angle', shineAngle + 'deg');
+                elements.tiltShine.style.opacity = Math.min(tiltAmount / 15, 0.4);
+            });
+
+            elements.wrapper.addEventListener('mouseleave', function () {
+                if (state.gyroEnabled) return;
+                elements.card.style.transform = 'rotateX(0) rotateY(0) scale(1) translateZ(0)';
+                elements.card.classList.remove('tilting');
+                elements.movementShine.style.opacity = '0';
+                elements.specularShine.style.opacity = '0';
+                elements.tiltShine.style.opacity = '0';
+            });
+
+
+            // Apple-style parallax (spring-based, always centered)
+            var parallaxX = 0;
+            var parallaxY = 0;
+
+            var shineLagX = 0;
+            var shineLagY = 0;
+
+            var PARALLAX_RANGE = 8;      // max visual tilt (degrees)
+            var PARALLAX_RESPONSE = 0.2; // responsiveness to movement
+            var PARALLAX_RETURN = 0.16;   // how fast it recenters
+
+
+            // HARD recenter-on-stillness (1s lock = reset tilt)
+            var lastBeta = null;
+            var lastGamma = null;
+
+            function handleOrientation(e) {
+                if (!state.gyroEnabled) return;
+
+                var beta = e.beta || 0;
+                var gamma = e.gamma || 0;
+
+                // Init last values
+                if (lastBeta === null) {
+                    lastBeta = beta;
+                    lastGamma = gamma;
+                    return;
+                }
+
+                // Motion delta (NOT absolute orientation)
+                var deltaBeta = beta - lastBeta;
+                var deltaGamma = gamma - lastGamma;
+
+                // Clamp first
+                deltaBeta = Math.max(-10, Math.min(10, deltaBeta));
+                deltaGamma = Math.max(-10, Math.min(10, deltaGamma));
+
+                // Then normalize motion force
+                var forceX = Math.max(-1, Math.min(1, deltaGamma / 6));
+                var forceY = Math.max(-1, Math.min(1, deltaBeta / 6));
+
+                forceX *= 0.85;
+                forceY *= 0.85;
+
+                // Apply movement impulse
+                parallaxX += forceX * PARALLAX_RESPONSE;
+                parallaxY += forceY * PARALLAX_RESPONSE;
+
+                // Clamp range
+                parallaxX = Math.max(-PARALLAX_RANGE, Math.min(PARALLAX_RANGE, parallaxX));
+                parallaxY = Math.max(-PARALLAX_RANGE, Math.min(PARALLAX_RANGE, parallaxY));
+
+                // Always spring back to center
+                parallaxX += (0 - parallaxX) * PARALLAX_RETURN;
+                parallaxY += (0 - parallaxY) * PARALLAX_RETURN;
+
+                // Apply transform
+                var tiltAmount = Math.sqrt(parallaxX * parallaxX + parallaxY * parallaxY);
+                // Light lag (shine follows motion with delay)
+                shineLagX += (parallaxX - shineLagX) * 0.12;
+                shineLagY += (parallaxY - shineLagY) * 0.12;
+
+                elements.movementShine.style.transform =
+                    'translate(' + (shineLagX * 6) + 'px, ' + (shineLagY * 6) + 'px)';
+
+                var scale = 1 + tiltAmount * 0.002;
+
+                elements.card.style.transform =
+                    'rotateX(' + (-parallaxY) + 'deg) ' +
+                    'rotateY(' + (-parallaxX) + 'deg) ' +
+                    'scale(' + scale + ')';
+                // Dynamic shadow parallax (strong depth cue)
+                var shadowX = parallaxX * 2.5;
+                var shadowY = parallaxY * 2.5;
+
+                elements.card.style.boxShadow =
+                    (-shadowX) + 'px ' +
+                    (-shadowY) + 'px 40px rgba(0, 0, 0, 0.45)';
+                // Content micro-translation (internal depth)
+                var contentOffsetX = -parallaxX * 1.6;
+                var contentOffsetY = -parallaxY * 1.6;
+
+                var content = elements.card.querySelector('.content-wrapper');
+                if (content) {
+                    content.style.transform =
+                        'translate(' + contentOffsetX + 'px, ' + contentOffsetY + 'px)';
+                }
+
+                // Focus separation (Apple-style depth cue)
+                var depthIntensity = Math.min(1, tiltAmount / PARALLAX_RANGE);
+
+                parallaxLayers.forEach(function (layer) {
+                    var depth = parseFloat(layer.dataset.depth) || 0;
+
+                    var moveX = -parallaxX * depth * 4;
+                    var moveY = -parallaxY * depth * 4;
+
+                    layer.style.transform =
+                        'translate3d(' + moveX + 'px, ' + moveY + 'px, 0)';
+
+                    // Background softens
+                    if (layer.classList.contains('parallax-bg')) {
+                        layer.style.filter =
+                            'blur(' + (depthIntensity * 2) + 'px)';
                     }
-                }, 3000);
-            } else {
-                var enableIOSGyro = function () {
+
+                    // Foreground stays sharp
+                    if (layer.classList.contains('parallax-fg')) {
+                        layer.style.filter =
+                            'blur(' + ((1 - depthIntensity) * 1) + 'px)';
+                    }
+                });
+
+
+                var shineX = 50 + (parallaxX / PARALLAX_RANGE) * 30;
+                var shineY = 50 + (parallaxY / PARALLAX_RANGE) * 30;
+
+                elements.movementShine.style.transform =
+                    'translate(' + (shineX - 50) + '%, ' + (shineY - 50) + '%)';
+                elements.movementShine.style.opacity = Math.min(tiltAmount / 6, 0.6);
+
+                var angle = Math.atan2(parallaxX, -parallaxY) * (180 / Math.PI) + 90;
+                elements.specularShine.style.setProperty('--shine-angle', angle + 'deg');
+                elements.specularShine.style.opacity = Math.min(tiltAmount / 8, 0.5);
+
+                elements.tiltShine.style.opacity = Math.min(tiltAmount / 10, 0.4);
+
+
+                // Update last values
+                lastBeta = beta;
+                lastGamma = gamma;
+            }
+
+
+            function autoTriggerAll() {
+                if (hasInteracted) return;
+                hasInteracted = true;
+
+                var isMobileOrTablet = window.innerWidth <= 1024;
+                if (!isMobileOrTablet) return;
+
+                var elem = document.documentElement;
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen().catch(function () { });
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen().catch(function () { });
+                } else if (elem.mozRequestFullScreen) {
+                    elem.mozRequestFullScreen().catch(function () { });
+                }
+
+                if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
                     if (!audioContext) initAudio();
                     DeviceOrientationEvent.requestPermission().then(function (r) {
                         if (r === 'granted') {
                             state.gyroEnabled = true;
                             window.addEventListener('deviceorientation', handleOrientation);
-                            console.log('Gyro enabled (iOS)');
+                            parallaxX = 0;
+                            parallaxY = 0;
+                            lastBeta = null;
+                            lastGamma = null;
 
-                            setTimeout(function () {
-                                var demoNote = document.querySelector('.demo-note');
-                                if (demoNote) {
-                                    demoNote.style.transition = 'opacity 0.5s ease';
-                                    demoNote.style.opacity = '0';
-                                    setTimeout(function () {
-                                        demoNote.style.display = 'none';
-                                    }, 500);
-                                }
-                            }, 2000);
+                            document.getElementById('demoText').textContent = 'Tilt phone for 3D effect';
                         }
-                    }).catch(function (err) {
-                        console.log('Gyro permission denied:', err);
-                    });
-                };
-
-                setTimeout(enableIOSGyro, 500);
-                document.addEventListener('touchstart', enableIOSGyro, { once: true });
-                document.addEventListener('click', enableIOSGyro, { once: true });
-            }
-        }
-
-        // Optional: pause gyro when tab is not visible (battery + stability)
-        document.addEventListener('visibilitychange', function () {
-            if (document.hidden) {
-                window.removeEventListener('deviceorientation', handleOrientation);
-            } else if (state.gyroEnabled) {
-                window.addEventListener('deviceorientation', handleOrientation);
-            }
-        });
-
-        function createPremiumShimmer() {
-            var cardRect = elements.card.getBoundingClientRect();
-            var shimmerContainer = document.createElement('div');
-            shimmerContainer.className = 'premium-shimmer active';
-            shimmerContainer.style.position = 'absolute';
-            shimmerContainer.style.left = cardRect.left + 'px';
-            shimmerContainer.style.top = cardRect.top + 'px';
-            shimmerContainer.style.width = cardRect.width + 'px';
-            shimmerContainer.style.height = cardRect.height + 'px';
-
-            document.getElementById('particleContainer').appendChild(shimmerContainer);
-
-            var ring = document.createElement('div');
-            ring.className = 'shimmer-ring';
-            shimmerContainer.appendChild(ring);
-
-            var wave = document.createElement('div');
-            wave.className = 'shimmer-wave';
-            shimmerContainer.appendChild(wave);
-
-            setTimeout(function () {
-                if (shimmerContainer.parentNode) {
-                    shimmerContainer.parentNode.removeChild(shimmerContainer);
+                    }).catch(function () { });
                 }
-            }, 1600);
-        }
+            }
 
-        function playEntranceAnimation() {
-            elements.card.classList.add('entering');
-            createPremiumShimmer();
-            setTimeout(function () {
-                playSound('cardEntrance');
-            }, 100);
-            setTimeout(function () {
-                elements.card.classList.remove('entering');
-            }, 1400);
-        }
+            document.addEventListener('touchstart', autoTriggerAll, { once: true });
+            document.addEventListener('click', autoTriggerAll, { once: true });
+            document.addEventListener('touchend', autoTriggerAll, { once: true });
 
-        initAudio();
-        initializeCard();
+            if (window.DeviceOrientationEvent) {
+                if (typeof DeviceOrientationEvent.requestPermission !== 'function') {
+                    state.gyroEnabled = true;
+                    window.addEventListener('deviceorientation', handleOrientation);
+                    parallaxX = 0;
+                    parallaxY = 0;
+                    lastBeta = null;
+                    lastGamma = null;
 
-        Object.keys(CONFIG.sounds).forEach(function (k) {
-            loadSound(k, CONFIG.sounds[k]);
-        });
+                    console.log('Gyro auto-enabled (Android)');
 
-        setTimeout(function () {
-            playEntranceAnimation();
-        }, 100);
+                    setTimeout(function () {
+                        var demoNote = document.querySelector('.demo-note');
+                        if (demoNote) {
+                            demoNote.style.transition = 'opacity 0.5s ease';
+                            demoNote.style.opacity = '0';
+                            setTimeout(function () {
+                                demoNote.style.display = 'none';
+                            }, 500);
+                        }
+                    }, 3000);
+                } else {
+                    var enableIOSGyro = function () {
+                        if (!audioContext) initAudio();
+                        DeviceOrientationEvent.requestPermission().then(function (r) {
+                            if (r === 'granted') {
+                                state.gyroEnabled = true;
+                                window.addEventListener('deviceorientation', handleOrientation);
+                                console.log('Gyro enabled (iOS)');
 
-        function enableFullscreenMode() {
-            var isMobileOrTablet = window.innerWidth <= 1024;
-            if (isMobileOrTablet) {
-                document.body.classList.add('fullscreen-mode');
-                document.body.style.overflow = 'hidden';
-                document.documentElement.style.overflow = 'hidden';
-                document.body.style.position = 'fixed';
-                document.body.style.width = '100%';
-                document.body.style.height = '100%';
-                document.body.style.overscrollBehavior = 'none';
-                document.documentElement.style.overscrollBehavior = 'none';
+                                setTimeout(function () {
+                                    var demoNote = document.querySelector('.demo-note');
+                                    if (demoNote) {
+                                        demoNote.style.transition = 'opacity 0.5s ease';
+                                        demoNote.style.opacity = '0';
+                                        setTimeout(function () {
+                                            demoNote.style.display = 'none';
+                                        }, 500);
+                                    }
+                                }, 2000);
+                            }
+                        }).catch(function (err) {
+                            console.log('Gyro permission denied:', err);
+                        });
+                    };
+
+                    setTimeout(enableIOSGyro, 500);
+                    document.addEventListener('touchstart', enableIOSGyro, { once: true });
+                    document.addEventListener('click', enableIOSGyro, { once: true });
+                }
+            }
+
+            // Optional: pause gyro when tab is not visible (battery + stability)
+            document.addEventListener('visibilitychange', function () {
+                if (document.hidden) {
+                    window.removeEventListener('deviceorientation', handleOrientation);
+                } else if (state.gyroEnabled) {
+                    window.addEventListener('deviceorientation', handleOrientation);
+                }
+            });
+
+            function createPremiumShimmer() {
+                var cardRect = elements.card.getBoundingClientRect();
+                var shimmerContainer = document.createElement('div');
+                shimmerContainer.className = 'premium-shimmer active';
+                shimmerContainer.style.position = 'absolute';
+                shimmerContainer.style.left = cardRect.left + 'px';
+                shimmerContainer.style.top = cardRect.top + 'px';
+                shimmerContainer.style.width = cardRect.width + 'px';
+                shimmerContainer.style.height = cardRect.height + 'px';
+
+                document.getElementById('particleContainer').appendChild(shimmerContainer);
+
+                var ring = document.createElement('div');
+                ring.className = 'shimmer-ring';
+                shimmerContainer.appendChild(ring);
+
+                var wave = document.createElement('div');
+                wave.className = 'shimmer-wave';
+                shimmerContainer.appendChild(wave);
 
                 setTimeout(function () {
-                    window.scrollTo(0, 1);
-                }, 100);
-
-                var requestFullscreen = function () {
-                    var elem = document.documentElement;
-                    if (elem.requestFullscreen) {
-                        elem.requestFullscreen().catch(function () { });
-                    } else if (elem.webkitRequestFullscreen) {
-                        elem.webkitRequestFullscreen().catch(function () { });
-                    } else if (elem.mozRequestFullScreen) {
-                        elem.mozRequestFullScreen().catch(function () { });
-                    } else if (elem.msRequestFullscreen) {
-                        elem.msRequestFullscreen().catch(function () { });
+                    if (shimmerContainer.parentNode) {
+                        shimmerContainer.parentNode.removeChild(shimmerContainer);
                     }
-                };
-
-                setTimeout(requestFullscreen, 300);
-                document.addEventListener('touchstart', requestFullscreen, { once: true });
-                document.addEventListener('click', requestFullscreen, { once: true });
-            } else {
-                document.body.classList.remove('fullscreen-mode');
-                document.body.style.overflow = '';
-                document.body.style.position = '';
-                document.body.style.width = '';
-                document.body.style.height = '';
-                document.documentElement.style.overflow = '';
+                }, 1600);
             }
-        }
 
-        enableFullscreenMode();
-        window.addEventListener('resize', enableFullscreenMode);
-        window.addEventListener('orientationchange', function () {
-            setTimeout(enableFullscreenMode, 100);
-        });
+            function playEntranceAnimation() {
+                elements.card.classList.add('entering');
+                createPremiumShimmer();
+                setTimeout(function () {
+                    playSound('cardEntrance');
+                }, 100);
+                setTimeout(function () {
+                    elements.card.classList.remove('entering');
+                }, 1400);
+            }
 
-        if (window.innerWidth >= 769) {
-            document.getElementById('demoText').textContent = 'Hover for 3D • Click QR toggle';
-        } else {
-            document.getElementById('demoText').textContent = 'Tilt phone for 3D effect';
-        }
+            initAudio();
+            initializeCard();
 
-    </script>
+            Object.keys(CONFIG.sounds).forEach(function (k) {
+                loadSound(k, CONFIG.sounds[k]);
+            });
+
+            setTimeout(function () {
+                playEntranceAnimation();
+            }, 100);
+
+            function enableFullscreenMode() {
+                var isMobileOrTablet = window.innerWidth <= 1024;
+                if (isMobileOrTablet) {
+                    document.body.classList.add('fullscreen-mode');
+                    document.body.style.overflow = 'hidden';
+                    document.documentElement.style.overflow = 'hidden';
+                    document.body.style.position = 'fixed';
+                    document.body.style.width = '100%';
+                    document.body.style.height = '100%';
+                    document.body.style.overscrollBehavior = 'none';
+                    document.documentElement.style.overscrollBehavior = 'none';
+
+                    setTimeout(function () {
+                        window.scrollTo(0, 1);
+                    }, 100);
+
+                    var requestFullscreen = function () {
+                        var elem = document.documentElement;
+                        if (elem.requestFullscreen) {
+                            elem.requestFullscreen().catch(function () { });
+                        } else if (elem.webkitRequestFullscreen) {
+                            elem.webkitRequestFullscreen().catch(function () { });
+                        } else if (elem.mozRequestFullScreen) {
+                            elem.mozRequestFullScreen().catch(function () { });
+                        } else if (elem.msRequestFullscreen) {
+                            elem.msRequestFullscreen().catch(function () { });
+                        }
+                    };
+
+                    setTimeout(requestFullscreen, 300);
+                    document.addEventListener('touchstart', requestFullscreen, { once: true });
+                    document.addEventListener('click', requestFullscreen, { once: true });
+                } else {
+                    document.body.classList.remove('fullscreen-mode');
+                    document.body.style.overflow = '';
+                    document.body.style.position = '';
+                    document.body.style.width = '';
+                    document.body.style.height = '';
+                    document.documentElement.style.overflow = '';
+                }
+            }
+
+            enableFullscreenMode();
+            window.addEventListener('resize', enableFullscreenMode);
+            window.addEventListener('orientationchange', function () {
+                setTimeout(enableFullscreenMode, 100);
+            });
+
+            if (window.innerWidth >= 769) {
+                document.getElementById('demoText').textContent = 'Hover for 3D • Click QR toggle';
+            } else {
+                document.getElementById('demoText').textContent = 'Tilt phone for 3D effect';
+            }
+
+        </script>
 </body>
 
 </html>
