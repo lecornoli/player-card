@@ -1880,6 +1880,9 @@
         var parallaxX = 0;
         var parallaxY = 0;
 
+        var shineLagX = 0;
+        var shineLagY = 0;
+
         var PARALLAX_RANGE = 8;      // max visual tilt (degrees)
         var PARALLAX_RESPONSE = 0.2; // responsiveness to movement
         var PARALLAX_RETURN = 0.16;   // how fast it recenters
@@ -1931,12 +1934,35 @@
 
             // Apply transform
             var tiltAmount = Math.sqrt(parallaxX * parallaxX + parallaxY * parallaxY);
+            // Light lag (shine follows motion with delay)
+            shineLagX += (parallaxX - shineLagX) * 0.08;
+            shineLagY += (parallaxY - shineLagY) * 0.08;
+
+            elements.movementShine.style.transform =
+                'translate(' + (shineLagX * 6) + 'px, ' + (shineLagY * 6) + 'px)';
+
             var scale = 1 + tiltAmount * 0.002;
 
             elements.card.style.transform =
                 'rotateX(' + (-parallaxY) + 'deg) ' +
                 'rotateY(' + (-parallaxX) + 'deg) ' +
                 'scale(' + scale + ')';
+            // Dynamic shadow parallax (strong depth cue)
+            var shadowX = parallaxX * 2;
+            var shadowY = parallaxY * 2;
+
+            elements.card.style.boxShadow =
+                (-shadowX) + 'px ' +
+                (-shadowY) + 'px 40px rgba(0, 0, 0, 0.45)';
+            // Content micro-translation (internal depth)
+            var contentOffsetX = -parallaxX * 1.2;
+            var contentOffsetY = -parallaxY * 1.2;
+
+            var content = elements.card.querySelector('.content-wrapper');
+            if (content) {
+                content.style.transform =
+                    'translate(' + contentOffsetX + 'px, ' + contentOffsetY + 'px)';
+            }
 
             // Focus separation (Apple-style depth cue)
             var depthIntensity = Math.min(1, tiltAmount / PARALLAX_RANGE);
