@@ -397,6 +397,16 @@
             filter: blur(22px);
         }
 
+        /* Parallax focus layers */
+        .parallax-bg {
+            transition: transform 0.25s ease, filter 0.25s ease;
+        }
+
+        .parallax-fg {
+            transition: transform 0.15s ease, filter 0.15s ease;
+        }
+
+
         /* Secondary directional shine */
         .shine-secondary {
             position: absolute;
@@ -1456,7 +1466,7 @@
             <div class="movement-shine" id="movementShine"></div>
             <div class="specular-shine" id="specularShine"></div>
             <div class="tilt-shine" id="tiltShine"></div>
-            <div class="bg-logo" id="bgLogo" data-depth="0.2"></div>
+            <div class="bg-logo parallax-bg" id="bgLogo" data-depth="0.15"></div>
             <div class="depth-layers">
                 <div class="depth-layer"></div>
                 <div class="depth-layer"></div>
@@ -1473,7 +1483,7 @@
 
                 </a>
                 <div class="player-info-grid">
-                    <div class="player-photo" id="playerPhoto" data-depth="0.6">
+                    <div class="player-photo parallax-fg" id="playerPhoto" data-depth="0.9">
                         <div class="player-photo-inner">👤 </div>
                     </div>
                     <div class="player-details">
@@ -1592,7 +1602,7 @@
             specularShine: document.getElementById('specularShine'),
             tiltShine: document.getElementById('tiltShine')
         };
-        
+
         var parallaxLayers = document.querySelectorAll('[data-depth]');
 
 
@@ -1927,6 +1937,32 @@
                 'rotateX(' + (-parallaxY) + 'deg) ' +
                 'rotateY(' + (-parallaxX) + 'deg) ' +
                 'scale(' + scale + ')';
+
+            // Focus separation (Apple-style depth cue)
+            var depthIntensity = Math.min(1, tiltAmount / PARALLAX_RANGE);
+
+            parallaxLayers.forEach(function (layer) {
+                var depth = parseFloat(layer.dataset.depth) || 0;
+
+                var moveX = -parallaxX * depth * 4;
+                var moveY = -parallaxY * depth * 4;
+
+                layer.style.transform =
+                    'translate3d(' + moveX + 'px, ' + moveY + 'px, 0)';
+
+                // Background softens
+                if (layer.classList.contains('parallax-bg')) {
+                    layer.style.filter =
+                        'blur(' + (depthIntensity * 2) + 'px)';
+                }
+
+                // Foreground stays sharp
+                if (layer.classList.contains('parallax-fg')) {
+                    layer.style.filter =
+                        'blur(' + ((1 - depthIntensity) * 1) + 'px)';
+                }
+            });
+
 
             var shineX = 50 + (parallaxX / PARALLAX_RANGE) * 30;
             var shineY = 50 + (parallaxY / PARALLAX_RANGE) * 30;
