@@ -1935,8 +1935,8 @@
             // Apply transform
             var tiltAmount = Math.sqrt(parallaxX * parallaxX + parallaxY * parallaxY);
             // Light lag (shine follows motion with delay)
-            shineLagX += (parallaxX - shineLagX) * 0.08;
-            shineLagY += (parallaxY - shineLagY) * 0.08;
+            shineLagX += (parallaxX - shineLagX) * 0.12;
+            shineLagY += (parallaxY - shineLagY) * 0.12;
 
             elements.movementShine.style.transform =
                 'translate(' + (shineLagX * 6) + 'px, ' + (shineLagY * 6) + 'px)';
@@ -1948,15 +1948,15 @@
                 'rotateY(' + (-parallaxX) + 'deg) ' +
                 'scale(' + scale + ')';
             // Dynamic shadow parallax (strong depth cue)
-            var shadowX = parallaxX * 2;
-            var shadowY = parallaxY * 2;
+            var shadowX = parallaxX * 2.5;
+            var shadowY = parallaxY * 2.5;
 
             elements.card.style.boxShadow =
                 (-shadowX) + 'px ' +
                 (-shadowY) + 'px 40px rgba(0, 0, 0, 0.45)';
             // Content micro-translation (internal depth)
-            var contentOffsetX = -parallaxX * 1.2;
-            var contentOffsetY = -parallaxY * 1.2;
+            var contentOffsetX = -parallaxX * 1.6;
+            var contentOffsetY = -parallaxY * 1.6;
 
             var content = elements.card.querySelector('.content-wrapper');
             if (content) {
