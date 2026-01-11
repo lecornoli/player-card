@@ -580,10 +580,17 @@
 
         /* Arrow indicator - ALWAYS VISIBLE, DIAGONAL */
         .badge-arrow {
-            font-size: 11px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             opacity: 0.8;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
+
+        .badge-arrow svg {
+            display: block;
+        }
+
 
         .tournament-badge::after {
             content: '';
@@ -1451,7 +1458,13 @@
             <div class="card-header"><a href="https://www.facebook.com/SarawakEsportsAssociation/" target="_blank"
                     rel="noopener noreferrer" class="tournament-badge metal-sheen">
                     <span id="tournamentText">LATEST TOURNAMENT</span>
-                    <span class="badge-arrow">↗</span>
+                    <span class="badge-arrow" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="12" height="12">
+                            <path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </span>
+
                 </a>
                 <div class="player-info-grid">
                     <div class="player-photo" id="playerPhoto">
