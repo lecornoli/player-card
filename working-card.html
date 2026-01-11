@@ -1870,12 +1870,27 @@
         var STILLNESS_TIME = 1500;     // ms before recenter starts
         var RECENTER_SPEED = 0.015;    // slow drift speed (human-safe)
 
+        // Pose-lock recentering (stable tilt handling)
+        var lastBeta = null;
+        var lastGamma = null;
+        var lastPoseChangeTime = Date.now();
+
+        var POSE_EPSILON = 0.15;    // degrees — how much rotation counts
+        var POSE_LOCK_TIME = 1800;  // ms holding same pose before recenter
+        var POSE_RECENTER_SPEED = 0.02; // smooth, invisible drift
+
 
         function handleOrientation(e) {
             if (!state.gyroEnabled) return;
 
             var beta = e.beta || 0;
             var gamma = e.gamma || 0;
+
+            if (lastBeta === null) {
+                lastBeta = beta;
+                lastGamma = gamma;
+            }
+
 
             if (initialBeta === null) {
                 initialBeta = beta;
@@ -1890,22 +1905,25 @@
             var relativeBeta = beta - initialBeta;
             var relativeGamma = gamma - initialGamma;
 
-            // Detect whether the phone is moving or being held still
-            var movementMagnitude =
-                Math.abs(relativeBeta - smoothBeta) +
-                Math.abs(relativeGamma - smoothGamma);
+            // Detect actual device rotation (not tilt amount)
+            var deltaBeta = Math.abs(beta - lastBeta);
+            var deltaGamma = Math.abs(gamma - lastGamma);
 
-            if (movementMagnitude > STILLNESS_THRESHOLD) {
-                // User is actively moving the phone
-                lastMovementTime = Date.now();
+            // Has the phone meaningfully rotated?
+            if (deltaBeta > POSE_EPSILON || deltaGamma > POSE_EPSILON) {
+                lastPoseChangeTime = Date.now();
             } else {
-                // Phone is relatively still
-                if (Date.now() - lastMovementTime > STILLNESS_TIME) {
-                    // Slowly redefine "center" — NO SNAP
-                    initialBeta += (beta - initialBeta) * RECENTER_SPEED;
-                    initialGamma += (gamma - initialGamma) * RECENTER_SPEED;
+                // Phone is held in a stable pose
+                if (Date.now() - lastPoseChangeTime > POSE_LOCK_TIME) {
+                    // Slowly redefine center toward current pose
+                    initialBeta += (beta - initialBeta) * POSE_RECENTER_SPEED;
+                    initialGamma += (gamma - initialGamma) * POSE_RECENTER_SPEED;
                 }
             }
+
+            // Update last pose
+            lastBeta = beta;
+            lastGamma = gamma;
 
 
             // Target tilt values
