@@ -1864,14 +1864,14 @@
         var smoothGamma = 0;
         var dampingFactor = 0.15; // Smooth interpolation
 
-        // Pose-lock recentering (stable tilt handling)
+        // HARD recenter-on-stillness (1s lock = reset tilt)
         var lastBeta = null;
         var lastGamma = null;
-        var lastPoseChangeTime = Date.now();
+        var lastMotionTime = Date.now();
 
-        var POSE_EPSILON = 0.15;    // degrees — how much rotation counts
-        var POSE_LOCK_TIME = 1800;  // ms holding same pose before recenter
-        var POSE_RECENTER_SPEED = 0.02; // smooth, invisible drift
+        var STILL_EPSILON = 0.12;   // degrees
+        var RECENTER_DELAY = 1000; // ms
+        var RECENTER_SPEED = 0.1;  // visual return speed
 
 
         function handleOrientation(e) {
@@ -1879,6 +1879,11 @@
 
             var beta = e.beta || 0;
             var gamma = e.gamma || 0;
+
+            if (lastBeta === null) {
+                lastBeta = beta;
+                lastGamma = gamma;
+            }
 
             if (lastBeta === null) {
                 lastBeta = beta;
@@ -1896,22 +1901,14 @@
             var sens = CONFIG.gyro.sensitivity;
             var max = CONFIG.gyro.maxTilt;
 
-            // Pose-lock detection
+            // Detect actual device motion
             var deltaBeta = Math.abs(beta - lastBeta);
             var deltaGamma = Math.abs(gamma - lastGamma);
 
-            var poseLocked = false;
+            var isMoving = deltaBeta > STILL_EPSILON || deltaGamma > STILL_EPSILON;
 
-            if (deltaBeta > POSE_EPSILON || deltaGamma > POSE_EPSILON) {
-                lastPoseChangeTime = Date.now();
-            } else {
-                if (Date.now() - lastPoseChangeTime > POSE_LOCK_TIME) {
-                    poseLocked = true;
-
-                    // Slowly redefine center
-                    initialBeta += (beta - initialBeta) * POSE_RECENTER_SPEED;
-                    initialGamma += (gamma - initialGamma) * POSE_RECENTER_SPEED;
-                }
+            if (isMoving) {
+                lastMotionTime = Date.now();
             }
 
             // Update last pose
@@ -1929,8 +1926,18 @@
             // SMOOTH DAMPENING - prevents jittery max-tilt behavior
             if (poseLocked) {
                 // When pose-locked, gently relax tilt toward zero
-                smoothGamma += (0 - smoothGamma) * 0.08;
-                smoothBeta += (0 - smoothBeta) * 0.08;
+                var timeStill = Date.now() - lastMotionTime;
+
+                if (timeStill >= RECENTER_DELAY) {
+                    // FORCE visual reset to center
+                    smoothGamma += (0 - smoothGamma) * RECENTER_SPEED;
+                    smoothBeta += (0 - smoothBeta) * RECENTER_SPEED;
+                } else {
+                    // Normal tracking
+                    smoothGamma += (targetX - smoothGamma) * dampingFactor;
+                    smoothBeta += (targetY - smoothBeta) * dampingFactor;
+                }
+
             } else {
                 // Normal tracking
                 smoothGamma += (targetX - smoothGamma) * dampingFactor;
@@ -1970,6 +1977,9 @@
                 elements.tiltShine.style.opacity = '0';
                 elements.card.classList.remove('tilting');
             }
+            lastBeta = beta;
+            lastGamma = gamma;
+
         }
 
         var hasInteracted = false;
