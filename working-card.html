@@ -1864,6 +1864,13 @@
         var smoothGamma = 0;
         var dampingFactor = 0.15; // Smooth interpolation
 
+        // 🧠 Natural recentering when device is held still
+        var lastMovementTime = Date.now();
+        var STILLNESS_THRESHOLD = 0.4; // degrees (how still is "still")
+        var STILLNESS_TIME = 1500;     // ms before recenter starts
+        var RECENTER_SPEED = 0.015;    // slow drift speed (human-safe)
+
+
         function handleOrientation(e) {
             if (!state.gyroEnabled) return;
 
@@ -1882,6 +1889,24 @@
 
             var relativeBeta = beta - initialBeta;
             var relativeGamma = gamma - initialGamma;
+
+            // Detect whether the phone is moving or being held still
+            var movementMagnitude =
+                Math.abs(relativeBeta - smoothBeta) +
+                Math.abs(relativeGamma - smoothGamma);
+
+            if (movementMagnitude > STILLNESS_THRESHOLD) {
+                // User is actively moving the phone
+                lastMovementTime = Date.now();
+            } else {
+                // Phone is relatively still
+                if (Date.now() - lastMovementTime > STILLNESS_TIME) {
+                    // Slowly redefine "center" — NO SNAP
+                    initialBeta += (beta - initialBeta) * RECENTER_SPEED;
+                    initialGamma += (gamma - initialGamma) * RECENTER_SPEED;
+                }
+            }
+
 
             // Target tilt values
             var targetX = Math.max(-max, Math.min(max, relativeGamma / (90 / max) * sens));
