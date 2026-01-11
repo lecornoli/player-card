@@ -1597,6 +1597,8 @@
             gyroEnabled: false
         };
 
+        var hasInteracted = false;
+
         // Audio
         var audioContext = null;
         var soundBuffers = {};
@@ -1819,6 +1821,7 @@
 
         // 3D tilt
         elements.wrapper.addEventListener('mousemove', function (e) {
+            if (state.gyroEnabled) return;
             var rect = elements.card.getBoundingClientRect();
             var x = e.clientX - rect.left;
             var y = e.clientY - rect.top;
@@ -1850,6 +1853,7 @@
         });
 
         elements.wrapper.addEventListener('mouseleave', function () {
+            if (state.gyroEnabled) return;
             elements.card.style.transform = 'rotateX(0) rotateY(0) scale(1) translateZ(0)';
             elements.card.classList.remove('tilting');
             elements.movementShine.style.opacity = '0';
@@ -1857,22 +1861,19 @@
             elements.tiltShine.style.opacity = '0';
         });
 
-        // REFINED Mobile gyroscope - smooth dampening
-        var initialBeta = null;
-        var initialGamma = null;
-        var smoothBeta = 0;
-        var smoothGamma = 0;
-        var dampingFactor = 0.15; // Smooth interpolation
+
+        // Apple-style parallax (spring-based, always centered)
+        var parallaxX = 0;
+        var parallaxY = 0;
+
+        var PARALLAX_RANGE = 8;      // max visual tilt (degrees)
+        var PARALLAX_RESPONSE = 0.2; // responsiveness to movement
+        var PARALLAX_RETURN = 0.16;   // how fast it recenters
+
 
         // HARD recenter-on-stillness (1s lock = reset tilt)
         var lastBeta = null;
         var lastGamma = null;
-        var lastMotionTime = Date.now();
-
-        var STILL_EPSILON = 0.12;   // degrees
-        var RECENTER_DELAY = 50; // ms
-        var RECENTER_SPEED = 0.12;  // visual return speed
-
 
         function handleOrientation(e) {
             if (!state.gyroEnabled) return;
@@ -1880,109 +1881,68 @@
             var beta = e.beta || 0;
             var gamma = e.gamma || 0;
 
+            // Init last values
             if (lastBeta === null) {
                 lastBeta = beta;
                 lastGamma = gamma;
+                return;
             }
 
-            if (lastBeta === null) {
-                lastBeta = beta;
-                lastGamma = gamma;
-            }
+            // Motion delta (NOT absolute orientation)
+            var deltaBeta = beta - lastBeta;
+            var deltaGamma = gamma - lastGamma;
+
+            // Clamp first
+            deltaBeta = Math.max(-10, Math.min(10, deltaBeta));
+            deltaGamma = Math.max(-10, Math.min(10, deltaGamma));
+
+            // Then normalize motion force
+            var forceX = Math.max(-1, Math.min(1, deltaGamma / 6));
+            var forceY = Math.max(-1, Math.min(1, deltaBeta / 6));
+
+            forceX *= 0.85;
+            forceY *= 0.85;
+
+            // Apply movement impulse
+            parallaxX += forceX * PARALLAX_RESPONSE;
+            parallaxY += forceY * PARALLAX_RESPONSE;
+
+            // Clamp range
+            parallaxX = Math.max(-PARALLAX_RANGE, Math.min(PARALLAX_RANGE, parallaxX));
+            parallaxY = Math.max(-PARALLAX_RANGE, Math.min(PARALLAX_RANGE, parallaxY));
+
+            // Always spring back to center
+            parallaxX += (0 - parallaxX) * PARALLAX_RETURN;
+            parallaxY += (0 - parallaxY) * PARALLAX_RETURN;
+
+            // Apply transform
+            var tiltAmount = Math.sqrt(parallaxX * parallaxX + parallaxY * parallaxY);
+            var scale = 1 + tiltAmount * 0.002;
+
+            elements.card.style.transform =
+                'rotateX(' + (-parallaxY) + 'deg) ' +
+                'rotateY(' + (-parallaxX) + 'deg) ' +
+                'scale(' + scale + ')';
+
+            var shineX = 50 + (parallaxX / PARALLAX_RANGE) * 30;
+            var shineY = 50 + (parallaxY / PARALLAX_RANGE) * 30;
+
+            elements.movementShine.style.transform =
+                'translate(' + (shineX - 50) + '%, ' + (shineY - 50) + '%)';
+            elements.movementShine.style.opacity = Math.min(tiltAmount / 6, 0.6);
+
+            var angle = Math.atan2(parallaxX, -parallaxY) * (180 / Math.PI) + 90;
+            elements.specularShine.style.setProperty('--shine-angle', angle + 'deg');
+            elements.specularShine.style.opacity = Math.min(tiltAmount / 8, 0.5);
+
+            elements.tiltShine.style.opacity = Math.min(tiltAmount / 10, 0.4);
 
 
-            if (initialBeta === null) {
-                initialBeta = beta;
-                initialGamma = gamma;
-                smoothBeta = 0;
-                smoothGamma = 0;
-            }
-
-            var sens = CONFIG.gyro.sensitivity;
-            var max = CONFIG.gyro.maxTilt;
-
-            // Detect actual device motion
-            var deltaBeta = Math.abs(beta - lastBeta);
-            var deltaGamma = Math.abs(gamma - lastGamma);
-
-            var isMoving = deltaBeta > STILL_EPSILON || deltaGamma > STILL_EPSILON;
-
-            if (isMoving) {
-                lastMotionTime = Date.now();
-            }
-
-            // Update last pose
+            // Update last values
             lastBeta = beta;
             lastGamma = gamma;
-
-            // Recompute relative tilt AFTER center drift
-            var relativeBeta = beta - initialBeta;
-            var relativeGamma = gamma - initialGamma;
-
-            // Target tilt values
-            var targetX = Math.max(-max, Math.min(max, relativeGamma / (90 / max) * sens));
-            var targetY = Math.max(-max, Math.min(max, relativeBeta / (90 / max) * sens));
-
-            // SMOOTH DAMPENING - prevents jittery max-tilt behavior
-            if (poseLocked) {
-                // When pose-locked, gently relax tilt toward zero
-                var timeStill = Date.now() - lastMotionTime;
-
-                if (timeStill >= RECENTER_DELAY) {
-                    // FORCE visual reset to center
-                    smoothGamma += (0 - smoothGamma) * RECENTER_SPEED;
-                    smoothBeta += (0 - smoothBeta) * RECENTER_SPEED;
-                } else {
-                    // Normal tracking
-                    smoothGamma += (targetX - smoothGamma) * dampingFactor;
-                    smoothBeta += (targetY - smoothBeta) * dampingFactor;
-                }
-
-            } else {
-                // Normal tracking
-                smoothGamma += (targetX - smoothGamma) * dampingFactor;
-                smoothBeta += (targetY - smoothBeta) * dampingFactor;
-            }
-
-            // Clamp again after smoothing
-            var tx = Math.max(-max, Math.min(max, smoothGamma));
-            var ty = Math.max(-max, Math.min(max, smoothBeta));
-
-            var tiltAmount = Math.sqrt(tx * tx + ty * ty);
-            var scale = 1 + (tiltAmount * 0.003);
-            var translateZ = tiltAmount * 1.5;
-
-            elements.card.style.transform = 'rotateX(' + (-ty) + 'deg) rotateY(' + (-tx) + 'deg) scale(' + scale + ') translateZ(' + translateZ + 'px)';
-
-            var shineX = ((tx / max) * 50) + 50;
-            var shineY = ((ty / max) * 50) + 50;
-            elements.movementShine.style.transform = 'translate(' + (shineX - 50) + '%, ' + (shineY - 50) + '%)';
-
-            var movement = Math.abs(tx) + Math.abs(ty);
-
-            if (movement > 1.5) {
-                elements.card.classList.add('tilting');
-                elements.movementShine.style.opacity = Math.min(movement / 8, 1);
-
-                var angle = Math.atan2(tx, -ty) * (180 / Math.PI) + 90;
-                elements.specularShine.style.setProperty('--shine-angle', angle + 'deg');
-                elements.specularShine.style.opacity = Math.min(movement / 10, 0.45);
-
-                elements.tiltShine.style.setProperty('--shine-x', shineX + '%');
-                elements.tiltShine.style.setProperty('--shine-y', shineY + '%');
-                elements.tiltShine.style.opacity = Math.min(movement / 10, 0.45);
-            } else {
-                elements.movementShine.style.opacity = '0';
-                elements.specularShine.style.opacity = '0';
-                elements.tiltShine.style.opacity = '0';
-                elements.card.classList.remove('tilting');
-            }
-            lastBeta = beta;
-            lastGamma = gamma;
-
         }
 
-        var hasInteracted = false;
 
         function autoTriggerAll() {
             if (hasInteracted) return;
@@ -2006,6 +1966,11 @@
                     if (r === 'granted') {
                         state.gyroEnabled = true;
                         window.addEventListener('deviceorientation', handleOrientation);
+                        parallaxX = 0;
+                        parallaxY = 0;
+                        lastBeta = null;
+                        lastGamma = null;
+
                         document.getElementById('demoText').textContent = 'Tilt phone for 3D effect';
                     }
                 }).catch(function () { });
@@ -2020,6 +1985,11 @@
             if (typeof DeviceOrientationEvent.requestPermission !== 'function') {
                 state.gyroEnabled = true;
                 window.addEventListener('deviceorientation', handleOrientation);
+                parallaxX = 0;
+                parallaxY = 0;
+                lastBeta = null;
+                lastGamma = null;
+
                 console.log('Gyro auto-enabled (Android)');
 
                 setTimeout(function () {
@@ -2062,6 +2032,15 @@
                 document.addEventListener('click', enableIOSGyro, { once: true });
             }
         }
+
+        // Optional: pause gyro when tab is not visible (battery + stability)
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden) {
+                window.removeEventListener('deviceorientation', handleOrientation);
+            } else if (state.gyroEnabled) {
+                window.addEventListener('deviceorientation', handleOrientation);
+            }
+        });
 
         function createPremiumShimmer() {
             var cardRect = elements.card.getBoundingClientRect();
