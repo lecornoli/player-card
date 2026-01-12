@@ -189,7 +189,7 @@
             background: linear-gradient(180deg,
                     rgba(255, 255, 255, 0.04),
                     rgba(255, 255, 255, 0.01));
-            backdrop-filter: blur(6px) saturate(1.1);
+            backdrop-filter: blur(2px) saturate(1.05);
             pointer-events: none;
             z-index: 0;
             /* 🔑 move behind content */
@@ -431,6 +431,15 @@
 
         .parallax-fg {
             transition: transform 0.15s ease, filter 0.15s ease;
+        }
+
+        /*Depth scale separation (CRITICAL for parallax feel) */
+        .parallax-bg {
+            transform: scale(0.96);
+        }
+
+        .parallax-fg {
+            transform: scale(1.02);
         }
 
 
@@ -2015,9 +2024,9 @@
 
                 // Foreground stays sharp
                 if (layer.classList.contains('parallax-fg')) {
-                    layer.style.filter =
-                        'blur(' + ((1 - depthIntensity) * 1) + 'px)';
+                    layer.style.filter = 'none';
                 }
+
             });
 
 
