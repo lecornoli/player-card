@@ -88,9 +88,26 @@
         }
 
         .card-container {
+            position: relative;
             perspective: 1500px;
             width: 100%;
             max-width: 420px;
+        }
+
+        .card-ambient-glow {
+            position: absolute;
+            inset: -40px;
+            border-radius: 24px;
+            background:
+                radial-gradient(circle at 50% 30%,
+                    rgba(250, 68, 84, 0.35),
+                    rgba(250, 68, 84, 0.15) 35%,
+                    rgba(0, 217, 255, 0.08) 55%,
+                    transparent 70%);
+            filter: blur(40px);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.9;
         }
 
         .player-card {
@@ -1506,6 +1523,7 @@
     <!-- Particle burst container -->
     <div class="particle-container" id="particleContainer"></div>
     <div class="card-container">
+        <div class="card-ambient-glow"></div>
         <div class="player-card" id="playerCard">
 
             <!-- MATERIAL DEPTH LAYER (Step 1) -->
