@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Player Card</title>
+
+  <style>
+    /* Page framing (demo only) */
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0f1115;
+      font-family: -apple-system, BlinkMacSystemFont,
+                   "SF Pro Text", Inter, system-ui, sans-serif;
+    }
+
+    /* Card shell */
+    .card {
+      width: 320px;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255,255,255,0.06),
+          rgba(0,0,0,0.28)
+        ),
+        radial-gradient(
+          120% 80% at 50% -20%,
+          rgba(255,255,255,0.04),
+          transparent 60%
+        );
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.45);
+      color: #ffffff;
+    }
+
+    /* Internal padding */
+    .card-content {
+      padding: 36px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ───────── IDENTITY ───────── */
+
+    .identity {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .photo {
+      width: 80px;
+      height: 80px;
+      border-radius: 18px;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255,255,255,0.12),
+          rgba(0,0,0,0.35)
+        );
+      margin-bottom: 20px;
+    }
+
+    .name {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: 0.04em;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .ign {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      opacity: 0.7;
+      text-align: center;
+    }
+
+    /* Accent separator */
+    .accent-line {
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        rgba(255,255,255,0.15),
+        rgba(255,255,255,0.35),
+        rgba(255,255,255,0.15)
+      );
+      margin-bottom: 28px;
+      opacity: 0.6;
+    }
+
+    /* ───────── CONTEXT ───────── */
+
+    .context {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 32px;
+    }
+
+    .meta {
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      opacity: 0.85;
+    }
+
+    /* ───────── CREDENTIAL ───────── */
+
+    .credential {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      opacity: 0.55;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="card-content">
+
+      <div class="identity">
+        <div class="photo"></div>
+        <div class="name">PLAYER NAME</div>
+        <div class="ign">@player_ign</div>
+      </div>
+
+      <div class="accent-line"></div>
+
+      <div class="context">
+        <div class="meta">Game Title</div>
+        <div class="meta">Role</div>
+        <div class="meta">Team Name</div>
+      </div>
+
+      <div class="credential">
+        OFFICIAL PLAYER CARD · 2026
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
