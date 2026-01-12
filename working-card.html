@@ -2032,18 +2032,6 @@
 
         };
 
-        var angle = Math.atan2(parallaxX, -parallaxY) * (180 / Math.PI) + 90;
-        elements.specularShine.style.setProperty('--shine-angle', angle + 'deg');
-        elements.specularShine.style.opacity = Math.min(tiltAmount / 8, 0.5);
-
-        elements.tiltShine.style.opacity = Math.min(tiltAmount / 10, 0.4);
-
-
-        // Update last values
-        lastBeta = beta;
-        lastGamma = gamma;
-
-
 
         function autoTriggerAll() {
             if (hasInteracted) return;
