@@ -100,8 +100,11 @@
                     rgba(0, 0, 0, 0.08)),
                 var(--bg-secondary);
             border-radius: 12px;
+            /* HARD GPU MASK — fixes sharp edge artifacts */
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
+            mask-image: radial-gradient(white, black);
             position: relative;
-            overflow: hidden;
+            overflow: visible;
             isolation: isolate;
             display: flex;
             flex-direction: column;
@@ -109,6 +112,9 @@
             transform-style: preserve-3d;
             transition: transform 0.1s ease-out, box-shadow 0.2s ease;
             animation: subtleRGBGlow 8s ease-in-out infinite;
+            will-change: transform;
+            transform: translateZ(0);
+            background-clip: padding-box;
         }
 
         /* Ensure no gap at bottom */
@@ -295,7 +301,7 @@
                     rgba(255, 255, 255, 0.1) 0%,
                     transparent 40%,
                     rgba(0, 0, 0, 0.05) 100%);
-            border-radius: 12px;
+            border-radius: inherit;
             pointer-events: none;
             z-index: 0;
         }
@@ -326,9 +332,9 @@
                     0 8px 16px rgba(0, 0, 0, 0.2),
                     0 16px 32px rgba(0, 0, 0, 0.25),
                     0 32px 64px rgba(0, 0, 0, 0.3),
-                    0 0 40px rgba(250, 68, 84, 0.6),
+                    0 0 28px rgba(250, 68, 84, 0.5),
                     inset 0 2px 4px rgba(255, 255, 255, 0.08),
-                    inset 0 -4px 8px rgba(0, 0, 0, 0.5);
+                    inset 0 -4px 8px rgba(0, 0, 0, 0.35);
             }
 
             33% {
@@ -338,9 +344,9 @@
                     0 8px 16px rgba(0, 0, 0, 0.2),
                     0 16px 32px rgba(0, 0, 0, 0.25),
                     0 32px 64px rgba(0, 0, 0, 0.3),
-                    0 0 40px rgba(0, 217, 255, 0.6),
+                    0 0 28px rgba(0, 217, 255, 0.5),
                     inset 0 2px 4px rgba(255, 255, 255, 0.08),
-                    inset 0 -4px 8px rgba(0, 0, 0, 0.5);
+                    inset 0 -4px 8px rgba(0, 0, 0, 0.35);
             }
 
             66% {
@@ -350,9 +356,9 @@
                     0 8px 16px rgba(0, 0, 0, 0.2),
                     0 16px 32px rgba(0, 0, 0, 0.25),
                     0 32px 64px rgba(0, 0, 0, 0.3),
-                    0 0 40px rgba(255, 215, 0, 0.6),
+                    0 0 28px rgba(255, 215, 0, 0.5),
                     inset 0 2px 4px rgba(255, 255, 255, 0.08),
-                    inset 0 -4px 8px rgba(0, 0, 0, 0.5);
+                    inset 0 -4px 8px rgba(0, 0, 0, 0.35);
             }
         }
 
@@ -397,7 +403,7 @@
                     0 8px 16px rgba(0, 0, 0, 0.2),
                     0 16px 32px rgba(0, 0, 0, 0.25),
                     0 32px 64px rgba(0, 0, 0, 0.3),
-                    0 0 40px rgba(250, 68, 84, 0.6),
+                    0 0 28px rgba(250, 68, 84, 0.5),
                     inset 0 2px 4px rgba(255, 255, 255, 0.08),
                     inset 0 -4px 8px rgba(0, 0, 0, 0.5);
             }
@@ -754,7 +760,7 @@
             border-color: rgba(250, 68, 84, 0.5);
             box-shadow:
                 0 0 25px rgba(250, 68, 84, 0.6),
-                0 0 40px rgba(250, 68, 84, 0.35),
+                0 0 28px rgba(250, 68, 84, 0.5),
                 0 0 60px rgba(250, 68, 84, 0.2);
             transform: translateY(-1px);
             animation: none;
@@ -803,6 +809,8 @@
             align-items: center;
             justify-content: center;
             text-align: center;
+            transform: translateZ(0);
+            backface-visibility: hidden;
         }
 
         .player-photo-inner:empty::before {
@@ -1923,7 +1931,7 @@
         var shineLagX = 0;
         var shineLagY = 0;
 
-        var PARALLAX_RANGE = 8;      // max visual tilt (degrees)
+        var PARALLAX_RANGE = 4;      // max visual tilt (degrees)
         var PARALLAX_RESPONSE = 0.2; // responsiveness to movement
         var PARALLAX_RETURN = 0.16;   // how fast it recenters
 
@@ -1988,21 +1996,22 @@
                 'rotateY(' + (-parallaxX) + 'deg) ' +
                 'scale(' + scale + ')';
             // Dynamic shadow parallax (strong depth cue)
-            var shadowX = parallaxX * 2.5;
-            var shadowY = parallaxY * 2.5;
+            var shadowX = parallaxX * 6;
+            var shadowY = parallaxY * 6;
 
             elements.card.style.boxShadow =
                 (-shadowX) + 'px ' +
-                (-shadowY) + 'px 40px rgba(0, 0, 0, 0.45)';
-            // Content micro-translation (internal depth)
-            var contentOffsetX = -parallaxX * 1.6;
-            var contentOffsetY = -parallaxY * 1.6;
+                (-shadowY) + 'px 60px rgba(0,0,0,0.45),' +
+                'inset 0 1px 0 rgba(255,255,255,0.05)';
 
-            var content = elements.card.querySelector('.content-wrapper');
-            if (content) {
-                content.style.transform =
-                    'translate(' + contentOffsetX + 'px, ' + contentOffsetY + 'px)';
-            }
+            elements.bgLogo.style.opacity =
+                0.04 + Math.min(tiltAmount / 20, 0.04);
+            elements.bgLogo.style.filter =
+                'blur(' + (tiltAmount * 0.15) + 'px)';
+            elements.card.style.backgroundPosition =
+                (50 + parallaxX * 1.2) + '% ' +
+                (50 + parallaxY * 1.2) + '%';
+
 
             // Focus separation (Apple-style depth cue)
             var depthIntensity = Math.min(1, tiltAmount / PARALLAX_RANGE);
@@ -2010,44 +2019,30 @@
             parallaxLayers.forEach(function (layer) {
                 var depth = parseFloat(layer.dataset.depth) || 0;
 
-                var moveX = -parallaxX * depth * 4;
-                var moveY = -parallaxY * depth * 4;
-
-                layer.style.transform =
-                    'translate3d(' + moveX + 'px, ' + moveY + 'px, 0)';
-
-                // Background softens
                 if (layer.classList.contains('parallax-bg')) {
                     layer.style.filter =
-                        'blur(' + (depthIntensity * 2) + 'px)';
+                        'blur(' + (depthIntensity * 2 * (1 - depth)) + 'px)';
                 }
 
-                // Foreground stays sharp
                 if (layer.classList.contains('parallax-fg')) {
                     layer.style.filter = 'none';
                 }
-
             });
 
 
-            var shineX = 50 + (parallaxX / PARALLAX_RANGE) * 30;
-            var shineY = 50 + (parallaxY / PARALLAX_RANGE) * 30;
+        };
 
-            elements.movementShine.style.transform =
-                'translate(' + (shineX - 50) + '%, ' + (shineY - 50) + '%)';
-            elements.movementShine.style.opacity = Math.min(tiltAmount / 6, 0.6);
+        var angle = Math.atan2(parallaxX, -parallaxY) * (180 / Math.PI) + 90;
+        elements.specularShine.style.setProperty('--shine-angle', angle + 'deg');
+        elements.specularShine.style.opacity = Math.min(tiltAmount / 8, 0.5);
 
-            var angle = Math.atan2(parallaxX, -parallaxY) * (180 / Math.PI) + 90;
-            elements.specularShine.style.setProperty('--shine-angle', angle + 'deg');
-            elements.specularShine.style.opacity = Math.min(tiltAmount / 8, 0.5);
-
-            elements.tiltShine.style.opacity = Math.min(tiltAmount / 10, 0.4);
+        elements.tiltShine.style.opacity = Math.min(tiltAmount / 10, 0.4);
 
 
-            // Update last values
-            lastBeta = beta;
-            lastGamma = gamma;
-        }
+        // Update last values
+        lastBeta = beta;
+        lastGamma = gamma;
+
 
 
         function autoTriggerAll() {
